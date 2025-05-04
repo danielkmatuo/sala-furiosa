@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Registrar-se</title>
+</head>
+<body style = "background-color: #212121;">
+    <h1 style = "color: #e3e3e3; text-align: center;">
+        Faça parte da maior comunidade de e-sports do mundo!
+    </h1> 
+    <hr> 
+    <br>
+    <br>
+    <br>
+    <br>
+    <br> 
+    {% for message in messages %}
+    <h5 style = "color: red; text-align: center;">{{message}}</h5>
+    {% endfor %}
+    <form action = "/registro/" method = "post">
+        {% csrf_token %}
+        <div style = "text-align: center;">
+            <label for = "fnome" style = "color: #e3e3e3;">Nome de usuário:</label>
+            <input type = "text" id = "fnome" name = "fnome" maxlength = 24 required>
+        </div>
+        <br>
+        <div style = "text-align: center;">
+            <label for = "femail" style = "color: #e3e3e3;">Email:</label>
+            <input type = "email" id = "femail" name = "femail" required>
+        </div>
+        <br>
+        <div style = "text-align: center;">
+            <label for = "fsenha" style = "color: #e3e3e3;">Senha:</label>
+            <input type = "password" id = "fsenha" name = "fsenha" maxlength = 12 required>
+            <p style = "color: #e3e3e3; text-align: center;">Digite uma senha de até 12 caracteres</p>
+        </div>
+        <br>
+        <div style = "text-align: center;">
+            <label for = "fsenha2" style = "color: #e3e3e3;">Repita a senha:</label>
+            <input type = "password" id = "fsenha2" name = "fsenha2" maxlength = 12 required>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div style = "text-align: center;">
+            <input type = "submit" value = "Registrar"> 
+        </div>
+    </form>
+    <p style = "color: #e3e3e3; text-align: center;">
+        Já tem uma conta? <a href = "/login/" style = "color: #e3e3e3;">Bora fazer login!</a>
+    </p>
+
+</body>
+</html>

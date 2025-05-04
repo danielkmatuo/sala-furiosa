@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar sala</title>
+</head>
+<body style = "background-color: #212121;">
+    <h1 style = "color: #e3e3e3; text-align: center;"></h1>
+    <input type = "text" id = "nome-sala" placeholder = "Digite o nome da nova sala">
+    <button id = "criar-sala-btn">Criar</button>
+    
+    <script>
+        function criaSala(){
+            const nomeUsuario = "{{request.user.username|escapejs}}"
+            const nomeSala = document.getElementById("nome-sala").value.trim();
+
+            if(!nomeSala){
+                alert("Digite um nome válido para a sala");
+                return;
+            }
+
+            fetch("/criar-sala/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({nome_sala: nomeSala, nome_usuario: nomeUsuario})
+            })
+            .then(response => response.json())
+            .then(data =>{
+                if (data.success){
+                    if(data.ja_existe){
+                        alert("Você entrou em uma sala já existente");
+                    }
+                    else{
+                        alert("Sala criada com sucesso!");
+                    }
+                    window.location.href = data.url
+                }
+                else{
+                    alert("Erro ao criar a sala: " + data.erro);
+                }
+            })
+            .catch(error => {
+                console.error("Erro na requisição: ", error)
+            })
+        }
+
+        function getCookie(nome){
+            let cookieValue = null;
+            if(document.cookie && (document.cookie !== "")){
+                const cookies = document.cookie.split(";");
+                for(let i = 0; i < cookies.length; i++){
+                    const cookie = cookies[i].trim();
+                    if(cookie.substring(0, nome.length + 1) === (nome + "=")){
+                        cookieValue = decodeURIComponent(cookie.substring(nome.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("criar-sala-btn").addEventListener("click", criaSala);
+    });
+    </script>
+</body>
+</html>

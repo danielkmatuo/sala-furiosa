@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova sala</title>
+</head>
+<body style = "background-color: #212121;">
+    <h1 style = "color: #e3e3e3;">Bem vindo à sala <span id = "nome_sala"></span></h1>
+    <script>
+        const nomeSala = "{{ nome_sala|escapejs }}";
+        document.getElementById("nome_sala").textContent = nomeSala;
+    </script>
+
+    <textarea id = "chat-log" cols = "100" rows = "30"><span id = "chat-log"></textarea><br>
+    <script>
+        const objDate = new Date();
+        const diaConversa = objDate.getDate();
+        const mesConversa = objDate.getMonth() + 1;
+
+        const hashMeses = new Map();
+        const listaMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho",
+                            "Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+        for (let mes = 1; mes < 13; mes++){
+            hashMeses.set(mes, listaMeses[mes - 1]);
+        }
+
+        document.getElementById("chat-log").textContent = "----- " + diaConversa + " de " +
+                                                          hashMeses.get(mesConversa) + " -----" +"\n";
+    </script>
+    <input id = "mensagem-input" type = "text" size = "100" placeholder = "Digite a mensagem aqui"><br>
+    <input id = "mensagem-envia" type = "button" value = "Enviar"><br>
+    {{ nome_sala|json_script:"nome-sala" }}
+
+    <script>
+        const nomeSalaWebsocket = JSON.parse(document.getElementById('nome-sala').textContent);
+
+        const chatSocket = new WebSocket(
+            "ws://"
+            + window.location.host
+            + "/ws/chat/"
+            + nomeSalaWebsocket
+            + "/"
+        );
+        
+        chatSocket.onmessage = function(e){
+            const data = JSON.parse(e.data);
+            let horario = new Date();
+            document.querySelector('#chat-log').value += (data.message + '\n') + 
+                                  ("(" + data.usuario + ", " + data.horario + ")" + "\n\n");
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('O Chat socket fechou inesperadamente');
+        };
+
+        document.querySelector('#mensagem-input').focus();
+        document.querySelector('#mensagem-input').onkeyup = function(e) {
+            if (e.key === 'Enter') { 
+                document.querySelector('#mensagem-envia').click();
+            }
+        };
+
+        document.querySelector('#mensagem-envia').onclick = function(e) {
+            const messageInputDom = document.querySelector('#mensagem-input');
+            const message = messageInputDom.value;
+            let horario = new Date();
+
+            if ((horario.getMonth() + 1) > 9 && horario.getDate() > 9){
+                chatSocket.send(JSON.stringify({
+                        'message': message,
+                        "day_month": horario.getFullYear() + "-" + (horario.getMonth() + 1) + "-" + horario.getDate(),
+                        "hours": horario.getHours() + ":" + horario.getMinutes() + ":" + horario.getSeconds()
+                    }));
+            }
+            else if ((horario.getMonth() + 1) <= 9 && horario.getDate() > 9){
+                chatSocket.send(JSON.stringify({
+                        'message': message,
+                        "day_month": horario.getFullYear() + "-0" + (horario.getMonth() + 1) + "-" + horario.getDate(),
+                        "hours": horario.getHours() + ":" + horario.getMinutes() + ":" + horario.getSeconds()
+                    }));
+            }
+            else if ((horario.getMonth() + 1) <= 9 && horario.getDate() <= 9){
+                chatSocket.send(JSON.stringify({
+                        'message': message,
+                        "day_month": horario.getFullYear() + "-0" + (horario.getMonth() + 1) + "-0" + horario.getDate(),
+                        "hours": horario.getHours() + ":" + horario.getMinutes() + ":" + horario.getSeconds()
+                    }));
+            }
+            messageInputDom.value = '';
+        };
+    </script>
+    <br>
+    <br>
+    <br>
+    <a href = "/logout/" style = "color: #e3e3e3;">Logout</a>
+</body>
+</html>

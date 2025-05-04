@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body style = "background-color: #212121;">
+    <h1 style = "color: #e3e3e3; text-align: center;">
+        Opa, bem vindo de volta furioso! Pronto para aquele papo sobre CS?
+    </h1>
+    <hr>
+    <br>
+    <br>
+    <br>
+    {% for message in messages%}
+    <h5 style = "color: red; text-align: center;">{{message}}</h5>
+    {% endfor %}
+    <form action = "/login/" method = "post">
+        {% csrf_token %}
+        <div style = "color: #e3e3e3; text-align: center;">
+            <label for = "fnomeacesso">Usuário/email:</label>
+            <input type = "text" id = "fnomeacesso" name = "fnomeacesso" required>
+        </div>
+        <br>
+        <div style = "color: #e3e3e3; text-align: center;">
+            <label for = "fsenhaacesso">Senha:</label>
+            <input type = "password" id = "fsenhaacesso" name = "fsenhaacesso" required>
+        </div>
+        <br>
+        <div style = "text-align: center;">
+            <input type = "submit" value = "Login">
+        </div>
+    </form>
+    <p style = "color: #e3e3e3; text-align: center;">
+        Não tem uma conta ainda? <a href = "/registro/" style = "color: #e3e3e3">Então chega mais!</a>
+    </p>
+</body>
+</html>
