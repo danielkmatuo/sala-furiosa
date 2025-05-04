@@ -37,7 +37,7 @@
         const nomeSalaWebsocket = JSON.parse(document.getElementById('nome-sala').textContent);
 
         const chatSocket = new WebSocket(
-            "ws://"
+            "wss://"
             + window.location.host
             + "/ws/chat/"
             + nomeSalaWebsocket

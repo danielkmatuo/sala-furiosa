@@ -27,9 +27,9 @@ SECRET_KEY = 'django-insecure-=@ebj=65aqmuzx+9g@i%vz#ug&0=yvtsap)jgg$wctn7j=)w+@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["sala-furiosa.onrender.com"]
+ALLOWED_HOSTS = [os.getenv("allowed_hosts")]
 
-CSRF_TRUSTED_ORIGINS = ["https://sala-furiosa.onrender.com"]
+CSRF_TRUSTED_ORIGINS = [os.getenv("csrf_trusted")]
 
 # Application definition
 
