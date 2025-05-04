@@ -1,6 +1,6 @@
 # Dockerfile
 #define imagem base a ser utilizada
-FROM python:3.12-slim 
+FROM python:3.11.11-slim 
 
 #impede criação de arquivos bytecode
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -21,3 +21,5 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 #Copia todos os arquivos locais para o diretório /code/
 COPY . /code/
+
+CMD ["daphne", "sala_furiosa.asgi:application", "--bind", "0.0.0.0", "--port", "8000"]
