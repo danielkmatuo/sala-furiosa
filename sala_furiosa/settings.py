@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["sala-furiosa.onrender.com"]
 
+CSRF_TRUSTED_ORIGINS = ["https://sala-furiosa.onrender.com"]
 
 # Application definition
 
