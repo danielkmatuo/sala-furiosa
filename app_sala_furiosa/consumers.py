@@ -4,6 +4,7 @@ from supabase import Client, create_client
 import os
 from channels.db import database_sync_to_async
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
@@ -23,8 +24,11 @@ class SalaFuriosaConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         # Esse método é chamado quando a conexão WebSocket é estabelecida
-        self.room_name = self.scope["url_route"]["kwargs"]["nome_sala"]
-        self.room_group_name = f"chat_{self.room_name}"
+        room_name_bruta = self.scope["url_route"]["kwargs"]["nome_sala"]
+        room_name_segura = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', room_name_bruta)
+        
+        self.room_name = room_name_bruta
+        self.room_group_name = f"chat_{room_name_segura}"
         self.usuario = self.scope["user"].username
 
         # Criação de uma sala e conexão ao grupo WebSocket
