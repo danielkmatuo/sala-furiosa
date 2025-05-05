@@ -35,9 +35,11 @@
 
     <script>
         const nomeSalaWebsocket = encodeURIComponent(JSON.parse(document.getElementById('nome-sala').textContent));
+        const wsSchema = window.location.protocol === "https:" ? "wss" : "ws";
 
         const chatSocket = new WebSocket(
-            "wss://"
+            wsSchema +
+            "://"
             + window.location.host
             + "/ws/chat/"
             + nomeSalaWebsocket
